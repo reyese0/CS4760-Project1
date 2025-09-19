@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <string.h>
 
+//prints out the help message
 void print_help() {
     printf("How to use: oss [-h] [-n proc] [-s simul] [-t iter]\n");
     printf("  -h      Show help message\n");
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]) {
     int childrenLaunched = 0;
     int childrenRunning = 0;
     
+    //parse command line arguments
     while ((opt = getopt(argc, argv, optstr)) != -1) {
         switch (opt) {
             case 'h':
@@ -44,6 +46,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
+    //checks for valid parameters
     if (totalChildren <= 0 || maxSimul <= 0 || iterations <= 0) {
         fprintf(stderr, "Parameters (-n, -s, -t) must be positive integers\n");
         print_help();
@@ -53,12 +56,13 @@ int main(int argc, char *argv[]) {
     printf("OSS: Launching %d children, %d simultaneous, with %d iterations\n",
            totalChildren, maxSimul, iterations);
     
+    //initially launch user processes until the maximum simultaneous is reached
     while (childrenLaunched < totalChildren && childrenRunning < maxSimul) {
         pid = fork();
         if (pid == 0) {
-            char strArg[20];
-            char *args[] = {"./user", strArg, NULL};
-            execvp(args[0], args);
+            char strArg[20]; //convert iterations to string
+            char *args[] = {"./user", strArg, NULL}; 
+            execvp(args[0], args); 
         } else if (pid > 0) {
             childrenLaunched++;
             childrenRunning++;
@@ -70,6 +74,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
+    //wait for children to finish and launch new processes
     while (childrenLaunched < totalChildren) {
         int status;
         pid_t childpid = wait(&status);
