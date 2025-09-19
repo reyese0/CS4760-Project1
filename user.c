@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int main(int argc, char *argValues[]) {
-    int iterations = atoi(argValues[1]);
+int main(int argc, char *argv[]) {
+    int iterations = atoi(argv[1]);
     
     for (int i = 1; i <= iterations; i++) {
         pid_t pid = getpid();

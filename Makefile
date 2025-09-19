@@ -1,13 +1,24 @@
-CC = gcc
-CFLAGS = -Wall -g
+CC	= g++ -g3
+CFLAGS  = -g3
+TARGET1 = user
+TARGET2 = oss
 
-all: oss user
+OBJS1	= user.o
+OBJS2	= oss.o
 
-oss: oss.c
-	$(CC) $(CFLAGS) -o oss oss.c
+all:	$(TARGET1) $(TARGET2)
 
-user: user.c
-	$(CC) $(CFLAGS) -o user user.c
+$(TARGET1):	$(OBJS1)
+	$(CC) -o $(TARGET1) $(OBJS1)
+
+$(TARGET2):	$(OBJS2)
+	$(CC) -o $(TARGET2) $(OBJS2)
+
+user.o:	user.c
+	$(CC) $(CFLAGS) -c user.c
+
+oss.o:	oss.c
+	$(CC) $(CFLAGS) -c oss.c
 
 clean:
-	rm -f oss user *.o
+	/bin/rm -f *.o $(TARGET1) $(TARGET2)
